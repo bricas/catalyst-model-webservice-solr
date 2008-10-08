@@ -4,6 +4,8 @@ if( -e 'MANIFEST.SKIP' ) {
     system( 'pod2text lib/Catalyst/Model/WebService/Solr.pm > README' );
 }
 
+perl_version '5.008';
+
 name 'Catalyst-Model-WebService-Solr';
 all_from 'lib/Catalyst/Model/WebService/Solr.pm';
 

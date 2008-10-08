@@ -18,7 +18,10 @@ Catalyst::Model::WebService::Solr - Use WebService::Solr in your Catalyst applic
     use base qw( Catalyst::Model::WebService::Solr );
     
     __PACKAGE__->config(
-        server => 'http://localhost:8080/solr/'
+        server  => 'http://localhost:8080/solr/',
+        options => {
+            autocommit => 1,
+        }
     );
 
 =head1 DESCRIPTION
@@ -36,7 +39,7 @@ passes your config options to L<WebService::Solr>'s C<new> method.
 
 sub COMPONENT {
     my ( $class, $c, $config ) = @_;
-    my $self = $class->new( $config->{ server } );
+    my $self = $class->new( $config->{ server }, ( $config->{ options } || {} ) );
 
     $self->config( $self->merge_config_hashes( $self->config, $config ) );
 
