@@ -3,9 +3,31 @@ package Catalyst::Model::WebService::Solr;
 use strict;
 use warnings;
 
-use base qw( WebService::Solr Catalyst::Model );
+use Moose;
+use WebService::Solr;
 
-our $VERSION = '0.01';
+extends 'Catalyst::Model';
+
+has 'solr' => (
+    is         => 'ro',
+    isa        => 'WebService::Solr',
+    handles    => qr{^[^_].*},
+    lazy_build => 1
+);
+
+our $VERSION = '0.02';
+
+sub _build_solr {
+    my $self   = shift;
+    my $config = $self->config;
+
+    return WebService::Solr->new( $config->{ server },
+        ( $config->{ options } || {} ) );
+}
+
+1;
+
+__END__
 
 =head1 NAME
 
@@ -31,20 +53,12 @@ Catalyst application.
 
 =head1 METHODS
 
-=head2 COMPONENT( )
+=head2 solr( )
 
-passes your config options to L<WebService::Solr>'s C<new> method.
+This is the L<WebService::Solr> instance to which all methods are delegated.
 
-=cut
-
-sub COMPONENT {
-    my ( $class, $c, $config ) = @_;
-    my $self = $class->new( $config->{ server }, ( $config->{ options } || {} ) );
-
-    $self->config( $self->merge_config_hashes( $self->config, $config ) );
-
-    return $self;
-}
+    # delegates to solr->search behind the scenes
+    my $response = $c->model('Solr')->search( $q );
 
 =head1 SEE ALSO
 
@@ -62,9 +76,9 @@ Brian Cassidy E<lt>bricas@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
+Copyright 2008-2009 by Brian Cassidy
+
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
 
 =cut
-
-1;
