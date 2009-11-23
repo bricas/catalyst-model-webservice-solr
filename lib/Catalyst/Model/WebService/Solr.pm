@@ -4,9 +4,22 @@ use strict;
 use warnings;
 
 use Moose;
+use Moose::Util::TypeConstraints;
 use WebService::Solr;
 
 extends 'Catalyst::Model';
+
+has 'server' => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => 'http://localhost:8983/solr',
+);
+
+has 'options' => (
+    is      => 'ro',
+    isa     => 'HashRef',
+    default => sub { {} },
+);
 
 has 'solr' => (
     is         => 'ro',
@@ -15,14 +28,12 @@ has 'solr' => (
     lazy_build => 1
 );
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub _build_solr {
     my $self   = shift;
-    my $config = $self->config;
 
-    return WebService::Solr->new( $config->{ server },
-        ( $config->{ options } || {} ) );
+    return WebService::Solr->new( $self->server, $self->options );
 }
 
 1;
@@ -73,6 +84,12 @@ This is the L<WebService::Solr> instance to which all methods are delegated.
 =head1 AUTHOR
 
 Brian Cassidy E<lt>bricas@cpan.orgE<gt>
+
+=head1 CONTRIBUTORS
+
+Matt S. Trout E<lt>mst@shadowcatsystems.co.ukE<gt>
+
+Oleg Kostyuk E<lt>cub@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
