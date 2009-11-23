@@ -15,5 +15,4 @@ requires 'WebService::Solr';
 
 test_requires 'Test::More';
 
-auto_install;
 WriteAll;
