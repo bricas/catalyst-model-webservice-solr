@@ -48,7 +48,10 @@ Catalyst::Model::WebService::Solr - Use WebService::Solr in your Catalyst applic
 
     package MyApp::Model::Solr;
     
-    use base qw( Catalyst::Model::WebService::Solr );
+    use Moose;
+    use namespace::autoclean;
+    
+    extends 'Catalyst::Model::WebService::Solr';
     
     __PACKAGE__->config(
         server  => 'http://localhost:8080/solr/',
